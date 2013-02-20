@@ -1,0 +1,6 @@
+If you want to build without GTK:
+make console
+
+Under ubuntu it needs packages:
+libusb-dev 
+libgtk3.0-dev (optional)
