@@ -13,30 +13,28 @@
 #include <sys/ioctl.h>
 #include <usb.h>
 
-struct usb_dev_handle
-{
-	int fd;
+struct usb_dev_handle {
+    int fd;
 
-	struct usb_bus *bus;
-	struct usb_device *device;
+    struct usb_bus *bus;
+    struct usb_device *device;
 
-	int config;
-	int interface;
-	int altsetting;
+    int config;
+    int interface;
+    int altsetting;
 
-	/* Added by RMT so implementations can store other per-open-device data */
-	void *impl_info;
+    /* Added by RMT so implementations can store other per-open-device data */
+    void *impl_info;
 };
 
-struct usb_ioctl
-{
-	int ifno;	/* interface 0..N ; negative numbers reserved */
-	int ioctl_code;	/* MUST encode size + direction of data so the macros in <asm/ioctl.h> give correct values */
-	void *data;	/* param buffer (in, or out) */
+struct usb_ioctl {
+    int ifno;    /* interface 0..N ; negative numbers reserved */
+    int ioctl_code;    /* MUST encode size + direction of data so the macros in <asm/ioctl.h> give correct values */
+    void *data;    /* param buffer (in, or out) */
 };
 
-#define IOCTL_USB_IOCTL         _IOWR('U', 18, struct usb_ioctl)
-#define IOCTL_USB_CONNECT	_IO('U', 23)
+#define IOCTL_USB_IOCTL     _IOWR('U', 18, struct usb_ioctl)
+#define IOCTL_USB_CONNECT   _IO('U', 23)
 
 /**
  * @brief

@@ -28,39 +28,39 @@
 
 #define zen_log printf
 
-typedef unsigned char 		u8;
-typedef unsigned short 		u16;
-typedef unsigned int  		u32;
-typedef unsigned long long int	u64;
+typedef unsigned char           u8;
+typedef unsigned short          u16;
+typedef unsigned int            u32;
+typedef unsigned long long int  u64;
 
 /* USB device ids */
-#define ZEN_VENDOR	0x041E
-#define ZEN_PRODUCT	0x4154
+#define ZEN_VENDOR      0x041E
+#define ZEN_PRODUCT     0x4154
 /* Zen Stone uses Sigmatel chip */
-#define ZEN_CHIP_ID	0x3500 /* SMTP3550 */
-#define ZEN_PROTO_VER	0x0200
+#define ZEN_CHIP_ID     0x3500 /* SMTP3550 */
+#define ZEN_PROTO_VER   0x0200
 /* Timeout in ms for all operations from libusb */
-#define ZEN_TIMEOUT 3000
+#define ZEN_TIMEOUT     3000
 /* Values returned */
-#define ZEN_SUCC 	0
-#define ZEN_ERROR 	-1
+#define ZEN_SUCC        0
+#define ZEN_ERROR       -1
 /* Maximal battery level */
-#define ZEN_MAX_BATT 100
+#define ZEN_MAX_BATT    100
 /* Endpoints */
-#define ZEN_ENDP_IN	0x81
-#define	ZEN_ENDP_OUT	0x02
+#define ZEN_ENDP_IN     0x81
+#define    ZEN_ENDP_OUT 0x02
 
-#define WSWAP(x)	( ((x) << 8) | ((x) >> 8) )
-#define DWSWAP(x)	( ((x) << 24) |	(((x) << 8) & 0x00ff0000) | (((x) >> 8) & 0x0000ff00) | ((x) >> 24) )
+#define WSWAP(x)    ( ((x) << 8) | ((x) >> 8) )
+#define DWSWAP(x)   ( ((x) << 24) |    (((x) << 8) & 0x00ff0000) | (((x) >> 8) & 0x0000ff00) | ((x) >> 24) )
 #define QSWAP(x) \
-	(((x & 0x00000000000000FF) << 56) | \
-	((x & 0x000000000000FF00) << 40) | \
-	((x & 0x0000000000FF0000) << 24) | \
-	((x & 0x00000000FF000000) << 8)  | \
-	((x & 0x000000FF00000000) >> 8)  | \
-	((x & 0x0000FF0000000000) >> 24) | \
-	((x & 0x00FF000000000000) >> 40) | \
-	((x & 0xFF00000000000000) >> 56) )
+    (((x & 0x00000000000000FF) << 56) | \
+    ((x & 0x000000000000FF00) << 40) | \
+    ((x & 0x0000000000FF0000) << 24) | \
+    ((x & 0x00000000FF000000) << 8)  | \
+    ((x & 0x000000FF00000000) >> 8)  | \
+    ((x & 0x0000FF0000000000) >> 24) | \
+    ((x & 0x00FF000000000000) >> 40) | \
+    ((x & 0xFF00000000000000) >> 56) )
 
 
 #pragma pack(push, 1)
@@ -68,167 +68,156 @@ typedef unsigned long long int	u64;
 /* If you want to read about CBW, CSW etc go to www.usb.org/developers/devclass_docs/usbmassbulk_10.pdf */
 
 /** Request struct - Command Block Wrapper. */
-struct sCBW
-{
-	/** CBW Signature (0x55 0x53 0x42 0x43). */
-	u32	signature; 	
-	/** Tag. */
-	u32	tag;
-	/** Transfer length. */
-	u32	transferLength;
-	/** Direction. */
-	u8	direction;	
-	/** Reserved (0x00). */
-	u8	reserved;	
-	/** Length of command. */
-	u8	lengthOfCommand;
-	/** Command. */
-	u8	command[16];	
+struct sCBW {
+    /** CBW Signature (0x55 0x53 0x42 0x43). */
+    u32 signature;     
+    /** Tag. */
+    u32 tag;
+    /** Transfer length. */
+    u32 transferLength;
+    /** Direction. */
+    u8  direction;    
+    /** Reserved (0x00). */
+    u8  reserved;    
+    /** Length of command. */
+    u8  lengthOfCommand;
+    /** Command. */
+    u8  command[16];    
 };
 
-#define CBW_SIG		0x43425355
+#define CBW_SIG     0x43425355
 
-#define CBW_DIR_OUT	0X00
-#define CBW_DIR_IN	0x80
+#define CBW_DIR_OUT 0X00
+#define CBW_DIR_IN  0x80
 
-#define CMD_SCSI_TEST_UNIT_READY	0x00
-#define CMD_SCSI_INQUIRY		0x12
-#define CMD_SCSI_CAPACITY		0x25
-#define CMD_SCSI_SIGMATEL_READ		0xC0 /* Zen Stone is using Sigmatel STMP3550 */
-#define CMD_SCSI_SIGMATEL_WRITE		0xC1
+#define CMD_SCSI_TEST_UNIT_READY    0x00
+#define CMD_SCSI_INQUIRY            0x12
+#define CMD_SCSI_CAPACITY           0x25
+#define CMD_SCSI_SIGMATEL_READ      0xC0 /* Zen Stone is using Sigmatel STMP3550 */
+#define CMD_SCSI_SIGMATEL_WRITE     0xC1
 
 /* from Sigmatel SDK, not all tested */
-#define CMD_SIGMATEL_GET_PROTOCOL_VERSION		0x00 /* tested */
-#define CMD_SIGMATEL_GET_STATUS				0x01
-#define CMD_SIGMATEL_GET_LOGICAL_MEDIA_INFO		0x02 /* tested */
-#define CMD_SIGMATEL_GET_LOGICAL_MEDIA_NUM		0x03 /* tested */
-#define CMD_SIGMATEL_GET_ALLOCATION_TABLE		0x05 /* tested */
-#define CMD_SIGMATEL_ALLOCATE_MEDIA			0x06
-#define CMD_SIGMATEL_ERASE_LOGICAL_MEDIA		0x07
-#define CMD_SIGMATEL_GET_LOGICAL_DRIVE_INFO		0x12 /* tested */
-#define CMD_SIGMATEL_READ_LOGICAL_DRIVE_SECTOR		0x13 /* tested */
-#define CMD_SIGMATEL_SET_LOGICAL_DRIVE_INFO		0x20
-#define CMD_SIGMATEL_WRITE_LOGICAL_DRIVE_SECTOR		0x23
-#define CMD_SIGMATEL_ERASE_LOGICAL_DRIVE		0x2f
-#define CMD_SIGMATEL_GET_CHIP_ID			0x30 /* tested */
-#define CMD_SIGMATEL_CHIP_RESET				0x31
+#define CMD_SIGMATEL_GET_PROTOCOL_VERSION   0x00 /* tested */
+#define CMD_SIGMATEL_GET_STATUS             0x01
+#define CMD_SIGMATEL_GET_LOGICAL_MEDIA_INFO 0x02 /* tested */
+#define CMD_SIGMATEL_GET_LOGICAL_MEDIA_NUM  0x03 /* tested */
+#define CMD_SIGMATEL_GET_ALLOCATION_TABLE   0x05 /* tested */
+#define CMD_SIGMATEL_ALLOCATE_MEDIA         0x06
+#define CMD_SIGMATEL_ERASE_LOGICAL_MEDIA    0x07
+#define CMD_SIGMATEL_GET_LOGICAL_DRIVE_INFO 0x12 /* tested */
+#define CMD_SIGMATEL_READ_LOGICAL_DRIVE_SECTOR 0x13 /* tested */
+#define CMD_SIGMATEL_SET_LOGICAL_DRIVE_INFO 0x20
+#define CMD_SIGMATEL_WRITE_LOGICAL_DRIVE_SECTOR 0x23
+#define CMD_SIGMATEL_ERASE_LOGICAL_DRIVE    0x2f
+#define CMD_SIGMATEL_GET_CHIP_ID            0x30 /* tested */
+#define CMD_SIGMATEL_CHIP_RESET             0x31
 
-#define CMD_ZEN_BATT_LEVEL				0x84
-#define CMD_ZEN_VOL_LIMIT_READ				0x81
-#define CMD_ZEN_VOL_LIMIT_WRITE				0x82
+#define CMD_ZEN_BATT_LEVEL                  0x84
+#define CMD_ZEN_VOL_LIMIT_READ              0x81
+#define CMD_ZEN_VOL_LIMIT_WRITE             0x82
 
 /* For CMD_SIGMATEL_READ_LOGICAL_DRIVE_SECTOR */
-#define CMD2_SIGMATEL_SECTOR_SIZE	0x00 /* not sure */
-#define CMD2_SIGMATEL_BANK_SIZE		0x04
+#define CMD2_SIGMATEL_SECTOR_SIZE   0x00 /* not sure */
+#define CMD2_SIGMATEL_BANK_SIZE     0x04
 
 /* Request confirmation struct - Command Status Wrapper. */
-struct sCSW
-{
-	/** CSW Signature (0x55 0x53 0x42 0x53). */
-	u32	signature; 	
-	/** Tag. */
-	u32	tag;
-	/** CBW Transfer Length - really used. */
-	u32	dataResidue;
-	/** Status. */
-	u8	status;
+struct sCSW {
+    /** CSW Signature (0x55 0x53 0x42 0x53). */
+    u32 signature;     
+    /** Tag. */
+    u32 tag;
+    /** CBW Transfer Length - really used. */
+    u32 dataResidue;
+    /** Status. */
+    u8  status;
 };
 
-#define CSW_SIG 		0x53425355
+#define CSW_SIG         0x53425355
 
-#define	CSW_OK			0x00
-#define CSW_CMD_FAILED	0x01
-#define CSW_PHASE_ERR	0x02
+#define CSW_OK          0x00
+#define CSW_CMD_FAILED  0x01
+#define CSW_PHASE_ERR   0x02
 
 /** Firmare version container, all values are chars not ints! */
-struct sFirmwVer
-{
-	u8	major;
-	u8	minor[2];
-	u8	micro;
+struct sFirmwVer {
+    u8  major;
+    u8  minor[2];
+    u8  micro;
 };
 
-#define ZEN_BATT_NOT_FULL 0x01
-#define ZEN_BATT_FULL 	  0x02
+#define ZEN_BATT_NOT_FULL   0x01
+#define ZEN_BATT_FULL       0x02
 
 /** Response from usb in case of battery check. */
-struct sBattResp
-{
-	u8	reserved;
-	u8	level;
-	u8	full;
+struct sBattResp {
+    u8  reserved;
+    u8  level;
+    u8  full;
 };
 
 /** For SCSI INQUIRY. */
-struct sDevInfo 
-{ 
-	u8	deviceType[2];
-	u8	versions; 
-	u8	responseDataFormat; 
-	u8	additionalLength; 
-	u8	reserved[2]; 
-	u8	flags;
-	u8	vendorId[8]; 
-	u8	productId[16]; 
-	u8	productRevisionLevel[4]; 
-	u8	vendorSpecific[20]; 
-	u8	reserved2[40]; 
+struct sDevInfo { 
+    u8  deviceType[2];
+    u8  versions; 
+    u8  responseDataFormat; 
+    u8  additionalLength; 
+    u8  reserved[2]; 
+    u8  flags;
+    u8  vendorId[8]; 
+    u8  productId[16]; 
+    u8  productRevisionLevel[4]; 
+    u8  vendorSpecific[20]; 
+    u8  reserved2[40]; 
 };
 
 /** Response from usb in case of capacity check. */
-struct sCapResp
-{
-	u32	sectors;
-	u32	sectorSize;
+struct sCapResp {
+    u32 sectors;
+    u32 sectorSize;
 };
 
 /** Response from usb in case of volume limit check. */
-struct sVolLimitRead
-{
-	u8	reserved;
-	u8	limit;
+struct sVolLimitRead {
+    u8  reserved;
+    u8  limit;
 };
 
 /** Struct send to usb in case of volume limit change. */
-struct sVolLimitWrite
-{
-	u8	pass[16];
-	u8	reserved;
-	u8	limit;	   
+struct sVolLimitWrite {
+    u8  pass[16];
+    u8  reserved;
+    u8  limit;       
 };
 
 /** Information about memory bank. */
-struct sAllocTableRow
-{
-	u8	bankNo;
-	u8	type;
-	u8	tag;
-	u64	size;
+struct sAllocTableRow {
+    u8  bankNo;
+    u8  type;
+    u8  tag;
+    u64 size;
 };
 
-#define SIGMATEL_BANK_TYPE_DATA		0x00
-#define	SIGMATEL_BANK_TYPE_SYSTEM	0x01
-#define	SIGMATEL_BANK_TYPE_UNKNOWN	0x02
+#define SIGMATEL_BANK_TYPE_DATA         0x00
+#define    SIGMATEL_BANK_TYPE_SYSTEM    0x01
+#define    SIGMATEL_BANK_TYPE_UNKNOWN   0x02
 
-#define SIGMATEL_BANK_TAG_STMPSYS		0x00
-#define SIGMATEL_BANK_TAG_USBMSC		0x01
-#define SIGMATEL_BANK_TAG_RESOURCE_BIN		0x02
-#define SIGMATEL_BANK_TAG_DATA			0x0A
-#define SIGMATEL_BANK_TAG_RESOURCE_BIN_RAM	0x10
-#define SIGMATEL_BANK_TAG_BOOTMANAGER		0x50
+#define SIGMATEL_BANK_TAG_STMPSYS       0x00
+#define SIGMATEL_BANK_TAG_USBMSC        0x01
+#define SIGMATEL_BANK_TAG_RESOURCE_BIN  0x02
+#define SIGMATEL_BANK_TAG_DATA          0x0A
+#define SIGMATEL_BANK_TAG_RESOURCE_BIN_RAM 0x10
+#define SIGMATEL_BANK_TAG_BOOTMANAGER   0x50
 
 /** Allocation table. */
-struct sAllocTable
-{
-	u16	rowsCount;
-	struct sAllocTableRow row[10]; /* max 10 -> SDK for SMTP36xx says so.. */
+struct sAllocTable {
+    u16    rowsCount;
+    struct sAllocTableRow row[10]; /* max 10 -> SDK for SMTP36xx says so.. */
 };
 
 /** Internal, for reading. */
-struct sBankSize
-{
-	u32	sectorsCount;
-	u32	sectorSize;
+struct sBankSize {
+    u32 sectorsCount;
+    u32 sectorSize;
 };
 
 #pragma pack(pop)
